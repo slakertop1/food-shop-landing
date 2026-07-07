@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лавка вкуса — фермерские продукты с доставкой</title>
+  <meta name="description" content="Мёд, орехи, чай, кофе и масла от небольших производителей. Ограниченная партия, доставка по городу.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- баннер «продажи приостановлены» (показывается по флагу с сервера) -->
+<div id="paused-banner" class="paused-banner" hidden>
+  🚫 Продажи временно приостановлены. Партия распродана — следите за обновлениями.
+</div>
+
+<header class="topbar">
+  <div class="container topbar__inner">
+    <span class="brand">🌿 Лавка&nbsp;вкуса</span>
+    <nav class="topbar__nav">
+      <a href="#catalog">Каталог</a>
+      <a href="#delivery">Доставка</a>
+    </nav>
+    <button id="cart-btn" class="cart-btn">
+      🛒 Корзина <span id="cart-count" class="cart-btn__count">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- О бренде -->
+<section class="hero">
+  <div class="container">
+    <h1>Настоящий вкус<br>от небольших производителей</h1>
+    <p class="hero__sub">
+      Мёд с башкирской пасеки, орехи нового урожая, ремесленный шоколад и кофе
+      спешелти. Мы отбираем продукты у фермеров и маленьких мастерских — то,
+      что не найти на полке супермаркета. Партия ограничена.
+    </p>
+    <a href="#catalog" class="btn">Смотреть каталог</a>
+    <div class="hero__badges">
+      <span>🚚 Доставка по городу</span>
+      <span>🌱 Без консервантов</span>
+      <span>📦 Ограниченная партия</span>
+    </div>
+  </div>
+</section>
+
+<!-- Каталог -->
+<section id="catalog" class="section">
+  <div class="container">
+    <h2>Каталог</h2>
+    <div id="catalog-grid" class="catalog">
+      <p class="muted" id="catalog-loading">Загружаем товары…</p>
+    </div>
+  </div>
+</section>
+
+<!-- Доставка -->
+<section id="delivery" class="section section--alt">
+  <div class="container container--narrow">
+    <h2>Доставка и оплата</h2>
+    <ul class="delivery">
+      <li>📦 Минимальная сумма заказа — <b id="min-order-text">…</b></li>
+      <li>🚚 Доставка курьером по городу на следующий день после подтверждения.</li>
+      <li>💳 Оплата онлайн на сайте или наличными/картой курьеру при получении.</li>
+      <li>📞 После оформления мы перезвоним, чтобы согласовать время доставки.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>🌿 Лавка вкуса — демо-магазин. Каталог и бренд вымышлены для примера.</p>
+    <p>Разработка сайтов с корзиной и оплатой — <a href="https://github.com/slakertop1">github.com/slakertop1</a></p>
+  </div>
+</footer>
+
+<!-- Корзина (выезжающая панель) -->
+<div id="cart-overlay" class="overlay" hidden></div>
+<aside id="cart" class="cart" hidden aria-label="Корзина">
+  <div class="cart__head">
+    <h3>Корзина</h3>
+    <button id="cart-close" class="icon-btn" aria-label="Закрыть">✕</button>
+  </div>
+  <div id="cart-items" class="cart__items"></div>
+  <div class="cart__foot">
+    <div class="cart__total">Итого: <span id="cart-total">0 ₽</span></div>
+    <p id="min-order-hint" class="cart__hint"></p>
+    <button id="checkout-btn" class="btn btn--wide">Оформить заказ</button>
+  </div>
+</aside>
+
+<!-- Оформление заказа (модальное окно) -->
+<div id="checkout-overlay" class="overlay" hidden></div>
+<div id="checkout" class="modal" hidden role="dialog" aria-label="Оформление заказа">
+  <div class="modal__head">
+    <h3>Оформление заказа</h3>
+    <button id="checkout-close" class="icon-btn" aria-label="Закрыть">✕</button>
+  </div>
+  <form id="checkout-form" class="modal__body" novalidate>
+    <label>ФИО<input name="customer" required minlength="2" maxlength="120" placeholder="Иванов Иван"></label>
+    <label>Телефон<input name="phone" required minlength="5" maxlength="30" placeholder="+7 900 123-45-67"></label>
+    <label>Адрес доставки<input name="address" required minlength="5" maxlength="300" placeholder="ул. Ленина, д. 1, кв. 2"></label>
+    <label>Комментарий <span class="muted">(необязательно)</span>
+      <textarea name="comment" maxlength="500" rows="2" placeholder="Домофон, удобное время"></textarea></label>
+
+    <fieldset class="pay-methods">
+      <legend>Способ оплаты</legend>
+      <label class="radio"><input type="radio" name="pay_method" value="online" checked> 💳 Онлайн на сайте</label>
+      <label class="radio"><input type="radio" name="pay_method" value="cod"> 💵 Курьеру при получении</label>
+    </fieldset>
+
+    <div class="modal__summary">К оплате: <span id="checkout-total">0 ₽</span></div>
+    <button type="submit" class="btn btn--wide" id="submit-order">Подтвердить заказ</button>
+    <p id="checkout-status" role="status"></p>
+  </form>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
