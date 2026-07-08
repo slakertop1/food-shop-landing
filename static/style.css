@@ -145,10 +145,13 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin-bottom: 28px; }
   border: 1px solid var(--border); border-radius: 10px;
 }
 .modal__body input:focus, .modal__body textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(63,143,91,0.15); }
+/* только вертикальный ресайз — иначе поле можно растянуть за пределы окна */
+.modal__body textarea { resize: vertical; max-width: 100%; min-height: 52px; }
 .pay-methods { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; }
 .pay-methods legend { padding: 0 6px; font-size: 0.85rem; color: var(--muted); }
-.radio { display: flex; align-items: center; gap: 8px; font-weight: 500; margin: 6px 0; cursor: pointer; }
-.radio input { width: auto; margin: 0; }
+.radio { display: flex; align-items: center; flex-wrap: nowrap; gap: 8px; font-weight: 500; margin: 6px 0; cursor: pointer; }
+/* сбрасываем наследование от общего правила .modal__body input, иначе радио превращается в блок и текст переносится */
+.radio input { flex: none; width: auto; margin: 0; padding: 0; border: none; box-shadow: none; display: inline-block; }
 .modal__summary { font-weight: 800; font-size: 1.1rem; margin-bottom: 14px; text-align: center; }
 #checkout-status { margin-top: 12px; text-align: center; font-weight: 600; min-height: 1.3em; }
 #checkout-status.ok { color: var(--accent-dark); }
